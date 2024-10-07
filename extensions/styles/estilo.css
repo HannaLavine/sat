@@ -1,0 +1,31 @@
+#titulo{
+	color: white;
+	font-weight: bold;
+}
+#navbardrop1{
+	color: white;
+}
+#navbardrop2{
+	color: white;
+}
+#navbardrop3{
+	color: white;
+}
+
+/* Quando passar o mouse */
+#navbardrop1:hover{
+	color: #15C465;
+	background-color: white;
+	border-radius: 10px;
+}
+#navbardrop2:hover{
+	color: #15C465;
+	background-color: white;
+	border-radius: 10px;
+}
+#navbardrop3:hover{
+	color: #15C465;
+	background-color: white;
+	border-radius: 10px;
+}
+
