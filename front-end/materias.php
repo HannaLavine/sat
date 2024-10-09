@@ -78,7 +78,7 @@
         <li class="nav-item">
           <a class="nav-link navegacao" href="index.php" id="navbardrop1">
             <i class="fa fa-user" aria-hidden="true"></i>
-            Professores
+            Professor
           </a>
         </li>
 

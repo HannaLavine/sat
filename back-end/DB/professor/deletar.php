@@ -9,11 +9,7 @@
 		header("location: ../../../front-end/index.php#visualizar");
 	};
 	//Comparacao com banco
-	$sql = "DELETE FROM  tb_professor WHERE prof_id = '$id'";
+	$sql = "DELETE FROM tb_professor WHERE prof_id = '$id'";
 	$selecione = mysqli_query($conexao,$sql);
 	mysqli_close($conexao);
-	echo "<script type='text/javascript'>
-	 	alert('Ação realizada com sucesso!'); 
-	 	location.href='../../../front-end/index.php#visualizar';
-	 	</script>";
 ?>
