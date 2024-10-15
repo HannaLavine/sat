@@ -2,6 +2,19 @@
   //Conexão com um arquivo distante e inicio da sessão
   include "../back-end/DB/conexao/conexao.php";
   session_start();
+
+  $sql = "SELECT
+      tb_escola.esc_id AS IdEscola,
+      tb_escola.esc_nome AS NomeEscola,
+      tb_municipio.mun_nome AS NomeMunicipio,
+      tb_departamento.dep_nome AS NomeDepartamento,
+      tb_modalidade.mod_nome AS NomeModalidade
+      FROM tb_escola
+      INNER JOIN tb_municipio ON tb_escola.mun_id = tb_municipio.mun_id
+      INNER JOIN tb_departamento ON tb_escola.dep_id = tb_departamento.dep_id
+      INNER JOIN tb_modalidade ON tb_escola.mod_id = tb_modalidade.mod_id 
+      ORDER BY esc_id DESC";
+  $result = $conexao -> query($sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,7 +28,8 @@
       <link rel="stylesheet" href="../extensions/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
       <script type="text/javascript" src="../extensions/scripts/jquery.min.js"></script>
       <script src="//netdna.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+      <link rel="stylesheet" href="../datatables/dataTables.min.css">
+      <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     
       <style type="text/css">
         .dropdown-menu{
@@ -74,7 +88,7 @@
         <li class="nav-item">
           <a class="nav-link navegacao" href="materias.php" id="navbardrop1">
             <i class="fa fa-book" aria-hidden="true"></i>
-            Materias
+            Disciplina
           </a>
         </li>
         <li class="nav-item dropdown">
@@ -98,7 +112,7 @@
       <div class="container"><br><br>
         <div class="row">
           <div class="mx-auto col-md-12">
-            <h1 class="wow animate__animated animate__bounceInLeft">Instituiçoes Educacionais</h1>
+            <h1 class="wow animate__animated animate__bounceInLeft">Instituições Educacionais</h1>
             <hr class="mx-auto w-25 bg-success">
           </div>
         </div>
@@ -106,9 +120,6 @@
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
               <a  class="nav-link text-dark active" id="cadastrar-tab" data-toggle="tab" href="#cadastrar" role="tab" aria-controls="cadastrar" aria-selected="true">Cadastrar</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-dark" id="visualizar-tab" data-toggle="tab" href="#visualizar" role="tab" aria-controls="visualizar" aria-selected="false">Visualizar</a>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent" style="overflow-y: scroll;overflow-x: scroll;">
@@ -177,7 +188,7 @@
                         };
                         echo "value='".$nome."'";
                        ?>required></div>
-                      <div  class="form-group tg col-md-12 input-group-lg">
+                      <div  class="form-group tg col-md-6 input-group-lg">
                         <select class="form-control" name="municipio" style="background-color: transparent;border: 1px solid black;cursor: pointer;">
                           <option value="0">Municipio...</option>
                           <?php
@@ -221,64 +232,93 @@
                 </div>
               </div>
             </div>
-            <div class="tab-pane fade" id="visualizar" role="tabpanel" aria-labelledby="visualizar-tab">
-              <div class="mx-auto col-md-12 row w-100 p-3" style="min-height: 30vh;max-height: 65vh;">
-                <div class="col-md-12" style="padding-top: 20px;">
-                  <div class=" table-responsive mx-auto col-md-12">
-                    <table id="table" class="table tg table-striped table-bordered table-hover" style="font-size: 14px">
-                      <thead>
-                        <tr>
-                          <th><label>Nome</label></th>
-                          <th><label>Municipio</label></th>
-                          <th><label title="Departamento Administrativo">Dep. Adm.</label></th>
-                          <th><label>Modalidade</label></th>
-                          <th><label>Ações</label></th>
-                        </tr>
-                        <tr>
-                          <th><input style="text-align: center" list="coluna1" placeholder="pesquisar" class="serch text-dark" type="text" id="txtColuna1"/></th>
-                          <th><input style="text-align: center" list="coluna2" placeholder="pesquisar" class="serch text-dark" type="text" id="txtColuna2"/></th>
-                          <th><input style="text-align: center" list="coluna3" placeholder="pesquisar" class="serch text-dark" type="text" id="txtColuna3"/></th>
-                          <th><input style="text-align: center" list="coluna4" placeholder="pesquisar" class="serch text-dark" type="text" id="txtColuna4"/></th>
-                          <th></th>
-                        </tr>     
-                      </thead>
-                      <tbody >
-                        <?php
-                          $selecione2 = "SELECT * FROM tb_escola, tb_departamento, tb_modalidade, tb_municipio WHERE tb_escola.mun_id = tb_municipio.mun_id and tb_departamento.dep_id = tb_escola.dep_id and tb_modalidade.mod_id = tb_escola.mod_id";
-                          $executar2 = mysqli_query($conexao, $selecione2);
-                          while ($valores = mysqli_fetch_assoc($executar2)){
-                            echo "<tr><td><h7 style='font-size: 14px;color: black;cursor: default;'>".$valores['esc_nome']."</h7></td><td><h7 style='font-size: 14px;color: black;cursor: default;'>".$valores['mun_nome']."</h7></td><td><h7 style='font-size: 14px;color: black;cursor: default;'>".$valores['dep_nome']."</h7></td><td><h7 style='font-size: 14px;color: black;cursor: default;'>".$valores['mod_nome']."</h7></td><td><a style='margin-right: 10px;' class='link1' href='instituicao.php?id=".$valores['esc_id']."' title='Clique aqui para editar os dados da escola ".$valores['esc_nome'].".'><i class='fa fa-pencil' aria-hidden='true'></i></a><a class='link2' href='../back-end/DB/instituicao/deletar.php?id=".$valores['esc_id']."' title='Clique aqui para apagar a escola ".$valores['esc_nome'].".'><i class='fa fa-trash' aria-hidden='true' style='color: red;'></i></a></td></tr>";
-                          };
-                        ?>
-                      </tbody>
-                    </table>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+        <!-- Tabela de Instituições -->
+        <span id="msgAlerta"></span>
+        <h2>Tabela de Instituições</h2>
+        <table class="table table-bordered table-striped" id="tabelaInst">
+          <!-- criação da tabela de instituições -->
+            <thead>
+              <tr>
+                <th scope="col"><center>ID</center></th>
+                <th scope="col"><center>Nome</center></th>
+                <th scope="col"><center>Município</center></th>
+                <th scope="col"><center>Departamento</center></th>
+                <th scope="col"><center>Modalidade</center></th>
+                <th scope="col"><center>Editar</center></th>
+                <th scope="col"><center>Excluir</center></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                while($user_data = mysqli_fetch_assoc($result)){
+                  echo "<tr>";
+                  echo "<td>".$user_data['IdEscola']."</td>";
+                  echo "<td>".$user_data['NomeEscola']."</td>";
+                  echo "<td>".$user_data['NomeMunicipio']."</td>";
+                  echo "<td>".$user_data['NomeDepartamento']."</td>";
+                  echo "<td>".$user_data['NomeModalidade']."</td>";
+                  echo "<td>
+                  <a href='instituicoes-editar.php?id=" . $user_data['IdEscola'] . "'> 
+                    <button type='button' class='btn btn-outline-warning' id='edit-button'>
+                      <i class='fa fa-pencil' aria-hidden='true'></i>
+                    </button>
+                  </a>
+                </td>";
+                  echo "<td><button type='button' class='btn btn-outline-danger' onclick='excluirInst(".$user_data['IdEscola'].")'><i class='fa fa-trash' aria-hidden='true'></i></button></td>";
+                  echo "</tr>";
+                }
+              ?>  
+            </tbody>
+          </table>
       </div>
     </div>
   </body>
 </html>
-<script type="text/javascript">
-    //inicio da pesquisa
-$(function(){
-    $("#table input").keyup(function(){        
-        var index = $(this).parent().index();
-        var nth = "#table td:nth-child("+(index+1).toString()+")";
-        var valor = $(this).val().toUpperCase();
-        $("#table tbody tr").show();
-        $(nth).each(function(){
-            if($(this).text().toUpperCase().indexOf(valor) < 0){
-                $(this).parent().hide();
-            }
-        });
+<!-- arquivos necessários para o funcionamento do data tables -->
+<script src="../datatables/jquery/jquery-3.7.1.min.js"></script>
+<script src="../datatables/dataTables.min.js"></script>
+
+<script>
+  //função de excluir 
+  async function excluirInst(id) {
+    var confirmar = confirm("Você realmente quer apagar o registro selecionado?");
+
+    if(confirmar){
+      //chama a função excluir
+      const dados = await fetch("../back-end/DB/instituicao/deletar.php?id=" + id);
+      //altera a mensagem exibida pelo span msgAlerta
+      document.getElementById("msgAlerta").innerHTML = "<div class='alert alert-success' role='alert'>Registro apagado com sucesso!</div>";
+      //recarrega a página
+      setTimeout(function() {
+						location.reload();
+					}, 300);
+    }else{
+      //altera a mensagem
+      document.getElementById("msgAlerta").innerHTML = "<div class='alert alert-danger' role='alert'> Registro não apagado</div>";
+      //recarrega a página
+      setTimeout(function() {
+						location.reload();
+					}, 300);
+    }
+  }
+</script>
+
+<script>
+    //implementando o data tables
+    $(document).ready( function () {
+    $('#tabelaInst').DataTable({
+      language: {
+			url: "../datatables/pt_br.json"
+		},
+    columnDefs: [{
+			"defaultContent": "-",
+			"targets": "_all",
+			"className": "dt-body-center"
+		}],
+		"lengthMenu": [[5, 10, 15, 25, 50, 100, -1], [5, 10, 15, 25, 50, 100, "Tudo"]],
     });
- 
-    $("#table input").blur(function(){
-        $(this).val("");
-    }); 
-});
-//fim pesquisa
+} );
+
 </script>

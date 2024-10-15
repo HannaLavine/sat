@@ -97,7 +97,7 @@
         <li class="nav-item">
           <a class="nav-link navegacao" href="materias.php" id="navbardrop1">
             <i class="fa fa-book" aria-hidden="true"></i>
-            Materias
+            Disciplina
           </a>
         </li>
         <li class="nav-item dropdown">
@@ -139,11 +139,11 @@
                   <form enctype="multipart/form-data" method="POST" action="../back-end/DB/professor/inserir.php">
                     <div class="form-row">
                       <div class="form-group tg col-md-12 input-group-lg"><input type="text" class="form-control text-dark " title="Preencha este campo com o nome completo do professor" style="background-color: transparent;border: 1px solid black;" name="nome" placeholder="Nome Completo" id="nomeProf" required></div>
-                      <div class="form-group tg col-md-6 input-group-lg" title="Evite sinais de pontuação e caracteres especiais."><input type="text" class="form-control text-dark " style="background-color: transparent;border: 1px solid black;" name="CPF" placeholder="CPF" id="cpfProf" required></div>
+                      <div class="form-group tg col-md-12 input-group-lg" title="Evite sinais de pontuação e caracteres especiais."><input type="text" class="form-control text-dark " style="background-color: transparent;border: 1px solid black;" name="CPF" placeholder="CPF" id="cpfProf" required></div>
                       <div class="form-group tg col-md-6 input-group-lg" title="Evite sinais de pontuação e caracteres especiais."><input type="text" class="form-control text-dark " style="background-color: transparent;border: 1px solid black;" name="RG" placeholder="Número do RG" id="rgProf" required></div>
-                      <div class="form-group tg col-md-6 input-group-lg" title="Neste campo deve ser enviado o RG scaneado"><label for="RGScan">RG Scaneado</label><input type="file" class="form-control text-dark " style="background-color: transparent;border: 1px solid black;" name="RGScan" placeholder="RG" id="RGScan" required></div>
+                      <div class="form-group tg col-md-6 input-group-lg" title="Neste campo deve ser enviado o RG scaneado"><input type="file" class="form-control text-dark " style="background-color: transparent;border: 1px solid black;" name="RGScan" placeholder="RG scaneado" id="RGScan" required></div>
                       <div class="form-group col-md-12">
-                        <center><input type="submit" value="Cadastrar" class="inline-btn" name="action"></center>
+                        <button type="submit" class="btn btn-secondary w-50 ajuda1">Cadastrar</button>
                       </div>
                     </div>
                   </form>
@@ -155,7 +155,7 @@
         <!--Tabela de professores-->
           <span id="msgAlerta"></span>
           <h2>Tabela de Professores</h2>
-          <table class="table table-bordered" id="tabelaProf">
+          <table class="table table-bordered table-striped" id="tabelaProf">
             <thead>
               <tr>
                 <th scope="col"><center>ID</center></th>
@@ -182,7 +182,13 @@
                       </button>
                     </a>
                   </td>";
-                  echo "<td><button type='button' class='btn btn-outline-warning' id='edit-button' onclick='editarProf(".$user_data['prof_id'].")'><i class='fa fa-pencil' aria-hidden='true'></i></button></td>";
+                  echo "<td>
+                  <a href='index-editar.php?id=" . $user_data['prof_id'] . "'> 
+                    <button type='button' class='btn btn-outline-warning' id='edit-button'>
+                      <i class='fa fa-pencil' aria-hidden='true'></i>
+                    </button>
+                  </a>
+                </td>";
                   echo "<td><button type='button' class='btn btn-outline-danger' onclick='excluirProf(".$user_data['prof_id'].")'><i class='fa fa-trash' aria-hidden='true'></i></button></td>";
                   echo "</tr>";
                 }
@@ -207,45 +213,15 @@
       //recarrega a página
       setTimeout(function() {
 						location.reload();
-					}, 250);
+					}, 300);
     }else{
       //altera a mensagem
-      document.getElementById("msgAlerta").innerHTML = "<div class='alert alert-danger' role='alert'> Erro: Registro não apagado</div>";
+      document.getElementById("msgAlerta").innerHTML = "<div class='alert alert-danger' role='alert'> Registro não apagado</div>";
       //recarrega a página
       setTimeout(function() {
 						location.reload();
-					}, 250);
+					}, 300);
     }
-  }
-</script>
-
-<script>
-	async function editarProf(id) {
-    const idProf = id;
-
-    $('table tbody tr').each(function() {
-				var rowId = $(this).find('td:eq(0)').text(); // Considerando que o ID está na primeira coluna
-        //a variável rowId pegará todos os ids existentes no banco, portanto, iremos comparar com a variável idProf
-        if (rowId == idProf) {
-					var nome = $(this).find('td:eq(1)').text();
-          var cpf = $(this).find('td:eq(2)').text();
-          var rg = $(this).find('td:eq(3)').text();
-
-					// Preencher os campos do formulário com os dados obtidos
-					$('#nomeProf').val(nome);
-					$('#cpfProf').val(cpf);
-					$('#rgProf').val(rg);
-
-					// Alterar o modo de ação para editar
-					$('#modoAcao').val('editar');
-					// Alterar o valor do botão para refletir a ação de edição
-					$('input[type="submit"]').val('Editar');
-					// Alterar a rota do formulário para a rota de atualização de usuários
-					$('form').attr('action', '../back-end/DB/professor/alterar.php?id='+idProf); // Alterar a action do formulário para a rota correta
-					// Alterar o nome do botão para identificar a ação como atualização
-					$('#btnC').attr('name', 'Editar');
-				}
-			});
   }
 </script>
 	
@@ -264,7 +240,7 @@
 			"targets": "_all",
 			"className": "dt-body-center"
 		}],
-		"lengthMenu": [[10, 15, 25, 50, 100, -1], [10, 15, 25, 50, 100, "Tudo"]],
+		"lengthMenu": [[5, 10, 15, 25, 50, 100, -1], [5, 10, 15, 25, 50, 100, "Tudo"]],
     });
 } );
 

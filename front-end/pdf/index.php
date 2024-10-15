@@ -2399,7 +2399,7 @@ session_start();
                 </div>
                 <div class="col-md-12" align="right" style="padding-top: 12px;">
                   <div class="col-md-12">
-                    <p align="right" style="">Paulo Alexandre Sousa Queiroz<br>Coordenador da CREDE 7</p>
+                    <p align="right" style="">Teste<br>Coordenador(a) da CREDE 7</p>
                   </div>
                 </div>
                 <div class="col-md-12" align="center" style="padding-top: 40px;">

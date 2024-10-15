@@ -94,7 +94,7 @@
         <li class="nav-item">
           <a class="nav-link navegacao" href="materias.php" id="navbardrop1">
             <i class="fa fa-book" aria-hidden="true"></i>
-            Materias
+            Disciplina
           </a>
         </li>
         <li class="nav-item dropdown">
@@ -155,6 +155,7 @@
                             <th><label style="margin: 12px;">Disciplina</label></th>
                           </tr>
                           <?php
+                          /**Seleciona todas as informações da escolas */
                             $escola = "SELECT * FROM tb_escola";
                             $escola2 = "SELECT * FROM tb_escola";
                             $escola3 = "SELECT * FROM tb_escola";
@@ -218,6 +219,7 @@
                             $executar29 = mysqli_query($conexao, $disciplina14);
                             $executar30 = mysqli_query($conexao, $disciplina15);
                             switch ($quantidade) {
+                              /**Cria um select de acordo com a quantidade definida pelo usuário */
                               case 1:
                                 echo "<tr>
                                       <td>

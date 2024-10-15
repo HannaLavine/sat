@@ -1,18 +1,14 @@
 <?php
-	//Conexão com um arquivo distante e inicio da sessão
-	include "../conexao/conexao.php";
-	session_start();
-	//Evitar entradas no arquivos com intenções perigosas
-	if (isset($_POST['nome']) and isset($_POST['CPF']) and isset($_POST['RG'])){
-		$id = $_POST['hidden'];
-		$nome = $_POST['nome'];
-		$CPF = $_POST['CPF'];
-		$RG = $_POST['RG'];
-	}else{
-		header("location: ../../../front-end/index.php");
-	};
+    session_start();
+    include_once "../conexao/conexao.php";
 
-	if(isset($_FILES['RGScan'])){
+    if(isset($_POST['update'])){
+       $id = $_POST['id'];
+       $nome = $_POST['nome'];
+       $rg = $_POST['rg'];
+       $cpf = $_POST['cpf'];
+
+       if(isset($_FILES['RGScan'])){
 		//recebe o arquivo do rg scaneado
 		$arquivo = $_FILES['RGScan'];
 		//listagem dos tipos que serão permitidos (questões de segurança)
@@ -39,13 +35,18 @@
 		$path = $pasta . $nomeDoArquivo . "." . $extensao;
 		
 		$arquivar = move_uploaded_file($arquivo["tmp_name"], $path);
-		
-	}
-	//Comparacao com banco
-	$sql = "UPDATE tb_professor SET prof_nome = '$nome' , prof_cpf = '$cpf', prof_rg = '$rg', nome = '$nomeDoArquivo', path = '$nomeAntigo', date_time = NOW() WHERE prof_id = '$id'";
-	$insert = mysqli_query($conexao,$sql);
-	mysqli_close($conexao);
-	echo "<script type='text/javascript'>
+
+    }
+	} else{
+        echo "<script type='text/javascript'>
+	 	alert('Falha na alteração!'); 
+	 	location.href='../../../front-end/index.php';
+	 	</script>";
+    }
+    $sql = "UPDATE tb_professor SET prof_nome = '$nome', prof_rg = '$rg', prof_cpf = '$cpf', path = '$path', nome = '$nomeAntigo', date_time = NOW() WHERE prof_id = '$id'";
+
+    $result = $conexao ->query($sql);
+    echo "<script type='text/javascript'>
 	 	alert('Alteração realizada com sucesso!'); 
 	 	location.href='../../../front-end/index.php';
 	 	</script>";
